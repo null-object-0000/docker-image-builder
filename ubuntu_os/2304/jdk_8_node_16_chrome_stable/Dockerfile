@@ -4,20 +4,14 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update && apt-get install -y curl git zip unzip
 
-# https://sdkman.io/
-# sdkman java maven
-RUN curl -s "https://get.sdkman.io" | bash
-RUN source $HOME/.sdkman/bin/sdkman-init.sh && \
-    sdk install java 8.0.382-tem && \
-    sdk install maven
+# jdk maven
+RUN apt-get install openjdk-8-jdk -y
+RUN apt-get install maven -y
 
-# https://github.com/nvm-sh/nvm
 # nvm node npm yarn pnpm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-RUN source $HOME/.nvm/nvm.sh && \
-    nvm install 16 && \
-    nvm use 16 && \
-    npm install -g npm yarn pnpm
+RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+RUN apt-get install -y nodejs
+RUN npm install -g npm yarn pnpm
 
 # https://googlechromelabs.github.io/chrome-for-testing/
 # chrome chrome_driver
@@ -35,5 +29,7 @@ RUN ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
 RUN rm /tmp/chrome.deb && \
     rm /tmp/chromedriver.zip
 
+RUN mkdir -p /data/marketcenter.java.pandora/chromedriver/linux64
+RUN ln -s /usr/local/share/chromedriver /data/marketcenter.java.pandora/chromedriver/linux64/chromedriver
 
 CMD ["/bin/bash"]
